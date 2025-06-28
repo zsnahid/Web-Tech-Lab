@@ -95,6 +95,10 @@ body {
   color: var(--accent-foreground);
 }
 
+.error {
+  color: var(--destructive);
+}
+
 /* Navbar styles */
 .navbar {
   background: var(--primary);

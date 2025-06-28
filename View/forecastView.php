@@ -252,7 +252,7 @@
               
               <div style="margin-top: 1.5rem;">
                 <a href="hourlyForecastController.php" class="btn btn-primary">
-                  📊 Hourly Forecast
+                  Hourly Forecast
                 </a>
               </div>
             </div>

@@ -1,6 +1,14 @@
 <?php
 require_once('db.php');
 
+function auth($email, $password)
+{
+	$con=getConnection();
+	$sql="select * from users where email='$email' and password='$password'";
+	$res=mysqli_query($con,$sql);
+	return $res;
+}
+
 function getHistoricalWeather(){
 	$con=getConnection();
 	$sql='select * from historical_weather';

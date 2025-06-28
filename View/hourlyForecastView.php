@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hourly Weather Forecast</title>
   <link rel="stylesheet" href="../index.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     .hourly-header {
       text-align: center;
@@ -170,6 +172,29 @@
       color: var(--foreground);
     }
 
+    /* Chart container styles */
+    .chart-container {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 400px;
+      margin-top: 1rem;
+    }
+
+    .chart-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
     /* Mobile responsiveness */
     @media (max-width: 768px) {
       .hourly-card {
@@ -282,6 +307,14 @@
           </div>
         </div>
 
+        <!-- Precipitation Probability Chart -->
+        <div class="chart-container">
+          <h2 class="chart-title">Precipitation Probability Throughout the Day</h2>
+          <div class="chart-wrapper">
+            <canvas id="precipitationChart"></canvas>
+          </div>
+        </div>
+
         <!-- Hourly Data Table -->
         <div class="hourly-card">
           <h2 style="margin-bottom: 1rem; color: var(--foreground);">Hourly Breakdown</h2>
@@ -348,6 +381,136 @@
         rows[currentHour].style.color = 'var(--accent-foreground)';
         rows[currentHour].style.fontWeight = '600';
       }
+
+      // Create precipitation probability chart
+      <?php if(isset($hourlyData) && count($hourlyData) > 0): ?>
+      const precipitationData = <?php echo json_encode(array_column($hourlyData, 'precipitation_probability_percent')); ?>;
+      const hourLabels = <?php echo json_encode(array_map(function($hour) { return date('g A', strtotime($hour['forecast_datetime'])); }, $hourlyData)); ?>;
+
+      const ctx = document.getElementById('precipitationChart').getContext('2d');
+      const precipitationChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: hourLabels,
+          datasets: [{
+            label: 'Precipitation Probability (%)',
+            data: precipitationData,
+            borderColor: 'rgb(34, 197, 94)',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: 'rgb(34, 197, 94)',
+            pointBorderColor: 'rgb(21, 128, 61)',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            title: {
+              display: false
+            },
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                color: 'rgb(156, 163, 175)',
+                font: {
+                  size: 14,
+                  weight: '500'
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(17, 24, 39, 0.9)',
+              titleColor: 'rgb(243, 244, 246)',
+              bodyColor: 'rgb(243, 244, 246)',
+              borderColor: 'rgb(75, 85, 99)',
+              borderWidth: 1,
+              cornerRadius: 8,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return 'Precipitation: ' + context.parsed.y + '%';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                color: 'rgba(75, 85, 99, 0.3)',
+                drawBorder: false
+              },
+              ticks: {
+                color: 'rgb(156, 163, 175)',
+                font: {
+                  size: 12
+                },
+                maxRotation: 45
+              },
+              title: {
+                display: true,
+                text: 'Time of Day',
+                color: 'rgb(156, 163, 175)',
+                font: {
+                  size: 14,
+                  weight: '500'
+                }
+              }
+            },
+            y: {
+              beginAtZero: true,
+              max: 100,
+              grid: {
+                color: 'rgba(75, 85, 99, 0.3)',
+                drawBorder: false
+              },
+              ticks: {
+                color: 'rgb(156, 163, 175)',
+                font: {
+                  size: 12
+                },
+                callback: function(value) {
+                  return value + '%';
+                }
+              },
+              title: {
+                display: true,
+                text: 'Precipitation Probability (%)',
+                color: 'rgb(156, 163, 175)',
+                font: {
+                  size: 14,
+                  weight: '500'
+                }
+              }
+            }
+          },
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          }
+        }
+      });
+
+      // Highlight current hour on chart
+      if (precipitationChart.data.labels[currentHour]) {
+        precipitationChart.data.datasets[0].pointBackgroundColor = precipitationChart.data.datasets[0].pointBackgroundColor.map((color, index) => {
+          return index === currentHour ? 'rgb(239, 68, 68)' : color;
+        });
+        precipitationChart.data.datasets[0].pointBorderColor = precipitationChart.data.datasets[0].pointBorderColor.map((color, index) => {
+          return index === currentHour ? 'rgb(185, 28, 28)' : color;
+        });
+        precipitationChart.data.datasets[0].pointRadius = precipitationChart.data.datasets[0].pointRadius.map((radius, index) => {
+          return index === currentHour ? 8 : radius;
+        });
+        precipitationChart.update();
+      }
+      <?php endif; ?>
     });
   </script>
 </body>
