@@ -123,4 +123,11 @@ function getAllHourlyForecast(){
 	return $data;
 }
 
+function getUserData($email){
+  $con = getConnection();
+  $sql = "SELECT * FROM users WHERE email='$email'";
+  $res = mysqli_query($con, $sql);
+  return mysqli_fetch_assoc($res);
+}
+
 ?>
