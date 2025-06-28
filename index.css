@@ -45,12 +45,10 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   min-height: 100vh;
-  padding: 20px;
 }
 
 /* Main container for responsive layout */
 .container {
-  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -61,11 +59,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-2px);
+  transition: transform 0.3s ease;
 }
 
 /* Button component base styling */
@@ -99,4 +93,128 @@ body {
 .btn-secondary:hover {
   background: var(--accent);
   color: var(--accent-foreground);
+}
+
+/* Navbar styles */
+.navbar {
+  background: var(--primary);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-foreground);
+  text-decoration: none;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-links li a {
+  color: var(--primary-foreground);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.nav-links li a:hover {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+}
+
+/* Main content styles */
+.main-content {
+  padding: 3rem 0;
+  min-height: calc(100vh - 80px);
+}
+
+.hero-section {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--card);
+  border-radius: 20px;
+  margin: 2rem auto;
+  max-width: 800px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--chart-1), var(--chart-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--muted-foreground);
+  margin-bottom: 2rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .navbar .container {
+    padding: 0 1rem;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+  }
+
+  .nav-links {
+    gap: 0.5rem;
+  }
+
+  .nav-links li a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .hero-section {
+    padding: 2rem 1rem;
+    margin: 1rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
 }
