@@ -176,6 +176,7 @@
       <a href="../index.php" class="logo">Weather App</a>
       <ul class="nav-links">
         <li><a href="../index.php">Home</a></li>
+        <li><a href="forecastController.php">5-Day Forecast</a></li>
         <li><a href="historicalWeatherController.php">Historical Weather</a></li>
       </ul>
     </div>

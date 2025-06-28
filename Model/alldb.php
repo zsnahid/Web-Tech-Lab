@@ -1,7 +1,7 @@
 <?php
 require_once('db.php');
 
-function getAll(){
+function getHistoricalWeather(){
 	$con=getConnection();
 	$sql='select * from historical_weather';
 	$res=mysqli_query($con,$sql);
@@ -59,6 +59,54 @@ function getMonthlyStats(){
 function getWeatherDataForChart(){
 	$con=getConnection();
 	$sql="SELECT record_date, avg_temperature_celsius, max_temperature_celsius, min_temperature_celsius, total_precipitation_mm FROM historical_weather ORDER BY record_date";
+	$res=mysqli_query($con,$sql);
+	$data = array();
+	while($row = mysqli_fetch_assoc($res)){
+		$data[] = $row;
+	}
+	return $data;
+}
+
+// Forecast functions
+function getForecastData(){
+	$con=getConnection();
+	$sql="SELECT * FROM weather_forecast ORDER BY forecast_date LIMIT 5";
+	$res=mysqli_query($con,$sql);
+	$data = array();
+	while($row = mysqli_fetch_assoc($res)){
+		$data[] = $row;
+	}
+	return $data;
+}
+
+function getForecastByDate($date){
+	$con=getConnection();
+	$sql="SELECT * FROM weather_forecast WHERE forecast_date = ?";
+	$stmt = mysqli_prepare($con, $sql);
+	mysqli_stmt_bind_param($stmt, "s", $date);
+	mysqli_stmt_execute($stmt);
+	$result = mysqli_stmt_get_result($stmt);
+	return mysqli_fetch_assoc($result);
+}
+
+// Hourly forecast functions
+function getHourlyForecastByDate($date){
+	$con=getConnection();
+	$sql="SELECT * FROM hourly_weather_forecast WHERE DATE(forecast_datetime) = ? ORDER BY forecast_datetime";
+	$stmt = mysqli_prepare($con, $sql);
+	mysqli_stmt_bind_param($stmt, "s", $date);
+	mysqli_stmt_execute($stmt);
+	$result = mysqli_stmt_get_result($stmt);
+	$data = array();
+	while($row = mysqli_fetch_assoc($result)){
+		$data[] = $row;
+	}
+	return $data;
+}
+
+function getAllHourlyForecast(){
+	$con=getConnection();
+	$sql="SELECT * FROM hourly_weather_forecast ORDER BY forecast_datetime";
 	$res=mysqli_query($con,$sql);
 	$data = array();
 	while($row = mysqli_fetch_assoc($res)){

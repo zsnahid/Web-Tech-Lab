@@ -12,6 +12,7 @@
     <div class="container">
       <a href="index.php" class="logo">Weather App</a>
       <ul class="nav-links">
+        <li><a href="Controller/forecastController.php">5-Day Forecast</a></li>
         <li><a href="Controller/historicalWeatherController.php">Historical Weather</a></li>
       </ul>
     </div>

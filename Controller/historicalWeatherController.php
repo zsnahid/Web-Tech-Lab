@@ -2,7 +2,7 @@
 require_once('../Model/alldb.php');
 
 // Get all weather data
-$allWeatherData = getAll();
+$allWeatherData = getHistoricalWeather();
 
 // Get record highs/lows
 $recordData = getRecordHighs();
