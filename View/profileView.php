@@ -211,8 +211,8 @@
       <a href="../index.php" class="logo">Weather App</a>
       <ul class="nav-links">
         <li><a href="../index.php">Home</a></li>
-        <li><a href="forecastController.php">5-Day Forecast</a></li>
-        <li><a href="historicalWeatherController.php">Historical Weather</a></li>
+        <li><a href="../Controller/forecastController.php">5-Day Forecast</a></li>
+        <li><a href="../Controller/historicalWeatherController.php">Historical Weather</a></li>
         <li><form action="../Controller/logoutController.php">
           <input type="submit" name="logout" value='Logout' class="btn btn-secondary">
         </form></li>

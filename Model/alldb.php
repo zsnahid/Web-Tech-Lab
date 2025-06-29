@@ -18,21 +18,15 @@ function getHistoricalWeather(){
 
 function getWeatherByDate($date){
 	$con=getConnection();
-	$sql="SELECT * FROM historical_weather WHERE record_date = ?";
-	$stmt = mysqli_prepare($con, $sql);
-	mysqli_stmt_bind_param($stmt, "s", $date);
-	mysqli_stmt_execute($stmt);
-	$result = mysqli_stmt_get_result($stmt);
+	$sql="SELECT * FROM historical_weather WHERE record_date = '$date'";
+	$result = mysqli_query($con, $sql);
 	return mysqli_fetch_assoc($result);
 }
 
 function getWeatherByDateRange($startDate, $endDate){
 	$con=getConnection();
-	$sql="SELECT * FROM historical_weather WHERE record_date BETWEEN ? AND ? ORDER BY record_date";
-	$stmt = mysqli_prepare($con, $sql);
-	mysqli_stmt_bind_param($stmt, "ss", $startDate, $endDate);
-	mysqli_stmt_execute($stmt);
-	$result = mysqli_stmt_get_result($stmt);
+	$sql="SELECT * FROM historical_weather WHERE record_date BETWEEN '$startDate' AND '$endDate' ORDER BY record_date";
+	$result = mysqli_query($con,$sql);
 	return $result;
 }
 
@@ -89,22 +83,16 @@ function getForecastData(){
 
 function getForecastByDate($date){
 	$con=getConnection();
-	$sql="SELECT * FROM weather_forecast WHERE forecast_date = ?";
-	$stmt = mysqli_prepare($con, $sql);
-	mysqli_stmt_bind_param($stmt, "s", $date);
-	mysqli_stmt_execute($stmt);
-	$result = mysqli_stmt_get_result($stmt);
+	$sql="SELECT * FROM weather_forecast WHERE forecast_date = '$date'";
+	$result = mysqli_query($con,$sql);
 	return mysqli_fetch_assoc($result);
 }
 
 // Hourly forecast functions
 function getHourlyForecastByDate($date){
 	$con=getConnection();
-	$sql="SELECT * FROM hourly_weather_forecast WHERE DATE(forecast_datetime) = ? ORDER BY forecast_datetime";
-	$stmt = mysqli_prepare($con, $sql);
-	mysqli_stmt_bind_param($stmt, "s", $date);
-	mysqli_stmt_execute($stmt);
-	$result = mysqli_stmt_get_result($stmt);
+	$sql="SELECT * FROM hourly_weather_forecast WHERE DATE(forecast_datetime) = '$date' ORDER BY forecast_datetime";
+	$result = mysqli_query($con,$sql);
 	$data = array();
 	while($row = mysqli_fetch_assoc($result)){
 		$data[] = $row;

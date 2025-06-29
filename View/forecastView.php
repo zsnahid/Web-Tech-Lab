@@ -107,7 +107,7 @@
     .dots-container {
       text-align: center;
       padding: 1rem;
-      background: var(--muted);
+      background: none;
     }
 
     .dot {
@@ -319,20 +319,6 @@
         dots[slideIndex - 1].classList.add("active");
       }
     }
-
-    // Auto slide every 10 seconds
-    setInterval(function() {
-      plusSlides(1);
-    }, 10000);
-
-    // Keyboard navigation
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'ArrowLeft') {
-        plusSlides(-1);
-      } else if (event.key === 'ArrowRight') {
-        plusSlides(1);
-      }
-    });
   </script>
 </body>
 </html>
