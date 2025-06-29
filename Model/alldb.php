@@ -130,4 +130,10 @@ function getUserData($email){
   return mysqli_fetch_assoc($res);
 }
 
+function updateUserData($email, $name, $password, $phone){
+  $con = getConnection();
+  $sql = "UPDATE users SET name='$name', password='$password', phone_number='$phone' WHERE email='$email'";
+  $res = mysqli_query($con, $sql);
+  return $res;
+}
 ?>

@@ -72,6 +72,7 @@
       color: var(--primary-foreground);
       border: none;
       border-radius: 8px;
+      margin-left: auto;
       padding: 0.5rem 1rem;
       font-size: 0.9rem;
       font-weight: 500;
@@ -223,18 +224,22 @@
     <div class="container">
         <h1 class="profile-title">Manage Profile</h1>
         
+        <?php if(isset($_SESSION['error'])): ?>
+          <div style="background: #fee; border: 1px solid #fcc; color: #c33; padding: 1rem; border-radius: 8px; margin: 1rem auto; max-width: 600px; text-align: center;">
+            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+          </div>
+        <?php endif; ?>
+        
+        <?php if(isset($_SESSION['success'])): ?>
+          <div style="background: #efe; border: 1px solid #cfc; color: #3c3; padding: 1rem; border-radius: 8px; margin: 1rem auto; max-width: 600px; text-align: center;">
+            <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+          </div>
+        <?php endif; ?>
+        
         <!-- Profile Card -->
         <form action="../Controller/profileUpdateController.php" method="POST" class="profile-card">
           <div class="card-header">
-            <div class="profile-picture-section">
-              <div class="profile-picture">
-                <!-- Profile picture placeholder - replace src with actual image -->
-                <!-- <img src="profile-photo.jpg" alt="Profile Picture"> -->
-                🤵
-              </div>
-            </div>
-            
-            <button class="edit-button">
+            <button type="button" class="edit-button">
               Edit Profile
             </button>
           </div>
@@ -242,35 +247,30 @@
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">Full Name</label>
-              <input type="text" class="form-input" value="<?php echo $res['name']; ?>" disabled>
+              <input type="text" name="name" class="form-input" value="<?php echo $res['name']; ?>" disabled>
             </div>
 
             <div class="form-group">
               <label class="form-label">Password</label>
               <div class="password-input">
-                <input type="password" class="form-input" value="<?php echo $res['password']; ?>" disabled>
+                <input type="password" name="password" class="form-input" value="<?php echo $res['password']; ?>" disabled>
                 <button type="button" class="password-toggle">View</button>
               </div>
             </div>
 
             <div class="form-group">
               <label class="form-label">Phone Number</label>
-              <input type="tel" class="form-input" value="<?php echo $res['phone_number']; ?>" disabled>
+              <input type="tel" name="phone" class="form-input" value="<?php echo $res['phone_number']; ?>" disabled>
             </div>
 
             <div class="form-group">
               <label class="form-label">Joined Date</label>
               <input type="text" class="form-input joined-date" value="<?php echo $res['created_at']; ?>" disabled readonly>
             </div>
-
-            <div class="form-group">
-              <label class="form-label">Profile Photo</label>
-              <input type="file" class="form-input" accept="image/*" disabled>
-            </div>
           </div>
 
           <div class="card-footer">
-            <button class="save-button">
+            <button type="submit" name="updateProfile" class="save-button">
               Save Changes
             </button>
           </div>
@@ -283,6 +283,8 @@
       const editButton = document.querySelector('.edit-button');
       const formInputs = document.querySelectorAll('.form-input:not([readonly])');
       const saveButton = document.querySelector('.save-button');
+      const joinedDate = document.querySelector('.joined-date');
+      const form = document.querySelector('.profile-card');
       
       let isEditing = false;
 
@@ -292,6 +294,11 @@
           formInputs.forEach(input => {
             input.disabled = false;
           });
+
+          // Keep joined date disabled
+          if(joinedDate) {
+            joinedDate.disabled = true;
+          }
           
           // Change button text and style
           editButton.textContent = 'Cancel Edit';
@@ -314,27 +321,48 @@
         }
       });
 
-      // Add click handler for save button
-      saveButton.addEventListener('click', function() {
+      // Intercept form submission to ensure fields are enabled
+      form.addEventListener('submit', function(e) {
         if (isEditing) {
-          // Here you would typically save the data
-          alert('Profile saved successfully!');
-          
-          // Reset to view mode
+          // Enable all form fields before submission
           formInputs.forEach(input => {
-            input.disabled = true;
+            input.disabled = false;
           });
           
-          editButton.textContent = 'Edit Profile';
-          editButton.style.background = 'var(--primary)';
-          editButton.style.color = 'var(--primary-foreground)';
-          
-          saveButton.style.opacity = '0.8';
-          saveButton.style.transform = 'scale(1)';
-          
-          isEditing = false;
+          // Keep joined date disabled as it shouldn't be submitted
+          if(joinedDate) {
+            joinedDate.disabled = true;
+          }
+        } else {
+          // Prevent submission if not in editing mode
+          e.preventDefault();
+          alert('Please click "Edit Profile" first to make changes.');
         }
       });
+
+      // Add click handler for save button
+      saveButton.addEventListener('click', function() {
+        if (!isEditing) {
+          alert('Please click "Edit Profile" first to make changes.');
+          return false;
+        }
+      });
+
+      // Password toggle functionality
+      const passwordToggle = document.querySelector('.password-toggle');
+      const passwordInput = document.querySelector('input[name="password"]');
+      
+      if(passwordToggle && passwordInput) {
+        passwordToggle.addEventListener('click', function() {
+          if(passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            passwordToggle.textContent = 'Hide';
+          } else {
+            passwordInput.type = 'password';
+            passwordToggle.textContent = 'View';
+          }
+        });
+      }
     });
   </script>
 </body>
